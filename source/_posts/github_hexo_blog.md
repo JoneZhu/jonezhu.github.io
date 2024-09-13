@@ -29,7 +29,7 @@ tags:
 
 将仓库属性选择为公开的：public。
 
-![Img](source/images//img_20240913220110_2.png)
+![Img](/images/img_20240913220110_2.png)
 
 - 2.克隆仓库
 ```
@@ -158,7 +158,7 @@ git push origin master
 
 ### 更换Hexo的主题(https://hexo.io/themes/)
 hexo 有四百多款主题，更换主题也非常简单方便
-![Img](source/images//img_20240913222817_3.png)
+![Img](/images/img_20240913222817_3.png)
 
 - 1. 选择你喜欢的主题，以olive为例
 - 2. 点击 olive 跳转到github页面，获取 主题的clone地址 https://github.com/zhangolve/hexo-theme-olive.git
@@ -177,7 +177,7 @@ git submodule update
 ```
 这些命令将初始化本地配置文件，并从子模块的仓库中拉取所有必要的数据。
 - 5. 更改根目录下的 _config 的theme的配置
-![Img](source/images//img_20240913223545_4.png)
+![Img](/images/img_20240913223545_4.png)
 
 - 6. 提交和推送更改
 
