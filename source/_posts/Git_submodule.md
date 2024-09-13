@@ -3,16 +3,18 @@ title: Git中的submodule
 date: 2024-09-13 18:00:00
 categories:
   - 技术
-  - 编程语言
+  - 工具
 tags:
-  - Python
+  - git
   - 编程
 ---
 ## Git中的submodule
 ### 背景
+今天在使用github action 的过程中遇到一个问题，错误的内容是“No url found for submodule path 'themes/stellar' in .gitmodules”，虽然我使用git已经有七八年了，但是submodule我基本上没有接触。所以我想顺便了解下git的submodule。
+![Img](source/images//img_20240913210658_1.png)
+submodule适用于什么样子的问题呢？
 在大型项目中，通常需要将代码根据功能拆分成不同的子模块，主项目依赖于这些子模块，但不需要关心子模块的内部开发细节。因此，所有源码并不总是放在同一个Git仓库中。
 ### 使用`submodule`的优势
-
 使用`submodule`功能可以建立主项目与子模块之间的依赖关系，包括子模块路径、远程仓库地址和版本号。这与简单地将子模块文件夹加入到`.gitignore`文件中不同，后者需要用户有先验知识，知道在当前目录下放置子模块的特定版本代码。
 ### 使用流程
 
