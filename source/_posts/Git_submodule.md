@@ -11,7 +11,7 @@ tags:
 ## Git中的submodule
 ### 背景
 今天在使用github action 的过程中遇到一个问题，错误的内容是“No url found for submodule path 'themes/stellar' in .gitmodules”，虽然我使用git已经有七八年了，但是submodule我基本上没有接触。所以我想顺便了解下git的submodule。
-![Img](source/images//img_20240913210658_1.png)
+![Img](/images/img_20240913210658_1.png)
 submodule适用于什么样子的问题呢？
 在大型项目中，通常需要将代码根据功能拆分成不同的子模块，主项目依赖于这些子模块，但不需要关心子模块的内部开发细节。因此，所有源码并不总是放在同一个Git仓库中。
 ### 使用`submodule`的优势
