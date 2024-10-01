@@ -3,7 +3,7 @@ title: NPM Unsupported URL Type link 问题
 date: 2024-09-13 18:00:00
 categories:
   - 技术
-  - 问题
+  - 技术甜点
 tags:
   - npm
 ---
