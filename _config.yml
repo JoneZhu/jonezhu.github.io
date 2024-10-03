@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 技术空间
+title: 黑蚁巢穴
 subtitle: ''
-description: ''
+description: '人生之败，非傲即堕，二者必居其一，然，勤则百弊皆除'
 keywords:
 author: JohnZhu
 language: en
@@ -13,7 +13,7 @@ timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://jonezhu.github.io/jonezhu.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
