@@ -66,7 +66,7 @@ jobs:
 这个工作流会在每次推送到 `main` 分支时触发，使用 SSH 私钥登录到你的服务器，并使用 rsync 同步文件到部署路径。
 ### 问题1 ： Set Up SSH fail
 #### 详细错误如下
-![Img](img_20241003092847_1.png)
+![Img](/images/img_20241003092847_1.png)
 
 ```
 Run webfactory/ssh-agent@v0.5.3
@@ -93,7 +93,7 @@ rsync error: unexplained error (code 255) at io.c(231) [sender=3.2.7]
 Error: Process completed with exit code 255.
 ```
 
-![Img](img_20241003093136_2.png)
+![Img](/images/img_20241003093136_2.png)
 #### 问题解决
 从错误输出内容`rsync: connection unexpectedly closed` 推测是ssh client 连接服务器异常，从详细错误信息中看不出为什么连接异常。
 如果说从0到1的过程我们看不出问题在哪里，那么能不能先看看0到0.5是否可以成功，所以在actions 加入测试连接ssh服务器的步骤。
@@ -120,7 +120,7 @@ sent 585 bytes  received 1,682 bytes  647.71 bytes/sec
 total size is 174,544  speedup is 76.99
 Error: Process completed with exit code 23.
 ```
-![Img](img_20241003094859_4.png)
+![Img](/images/img_20241003094859_4.png)
 
 #### 问题分析
 通过查询资料可得知 `exit code 23 `部分传输成功。志杰看日志也无从得知到底是哪个文件传输失败。只能开启了漫无目的网上搜索资料中，网上对于 `exit code 23` 做了不下8种原因的归纳，没办法直接得知具体传输失败的文件。
@@ -131,7 +131,7 @@ Error: Process completed with exit code 23.
 rsync: [generator] delete_file: unlink(.user.ini) failed: Operation not permitted (1)
 ```
 再看宝塔该文件的权限是root
-![Img](img_20241003095057_5.png)
+![Img](/images/img_20241003095057_5.png)
 #### 解决方案
 基本定位到了传输失败的文件，那么也比较容易解决，在通过rsync同步文件添加 `--exclude='.user.ini'`，即可解决问题
 
