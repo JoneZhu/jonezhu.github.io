@@ -4,11 +4,12 @@
 
 # Site
 title: 黑蚁巢穴
+favicon: favicon.ico
 subtitle: ''
 description: '人生之败，非傲即堕，二者必居其一，然，勤则百弊皆除'
 keywords:
 author: JohnZhu
-language: en
+language: zh-CN
 timezone: ''
 
 # URL
