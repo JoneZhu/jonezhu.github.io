@@ -1,7 +1,3 @@
 [submodule "themes/stellar"]
     path = themes/stellar
     url = https://github.com/xaoxuu/hexo-theme-stellar.git
-
-[submodule "themes/diversity"]
-    path = themes/diversity
-    url = https://github.com/huazie/hexo-theme-diversity.git
