@@ -1,5 +1,5 @@
 ---
-title: NodeJS学习记录
+title: 快速熟悉NodeJS
 date: 2024-10-06 21:03:32
 categories:
   - 技术
