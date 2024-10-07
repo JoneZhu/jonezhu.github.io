@@ -146,4 +146,4 @@ myEmitter.emit('event');
 - 关于异步编程可以参考[七天学会NodeJS](https://nqdeng.github.io/7-days-nodejs/#6) 我这里就不搬运了。
 ## 引用资料
 - [nodejs和go的语言选择](https://www.zhihu.com/question/583192972/answer/2888081409)
-- [七天学会NodeJS](https://nqdeng.github.io/7-days-nodejs/#6)
+- [七天学会NodeJS](https://nqdeng.github.io/7-days-nodejs/)
