@@ -36,14 +36,12 @@ ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -f ~/.ssh/id_rsa_gitlab
 ```bash
 # GitHub SSH 配置
 Host github.com
-  HostName github.com
   User git
   IdentityFile ~/.ssh/id_rsa_github
   IdentitiesOnly yes
 
 # GitLab SSH 配置
 Host gitlab.com
-  HostName gitlab.com
   User git
   IdentityFile ~/.ssh/id_rsa_gitlab
   IdentitiesOnly yes
@@ -69,7 +67,7 @@ ssh -T git@github.com
 ssh -T git@gitlab.com
 ```
 
-这些命令应该返回一条消息，确认你已成功认证，但 Git 不提供 shell 访问。
+这些命令应该返回一条消息`Welcome to GitLab`，已成功认证，否则会弹出输入密码，如果弹出输入密码请检查上边几个步骤的正确性。
 
 ### 步骤 5: 使用 Git
 
