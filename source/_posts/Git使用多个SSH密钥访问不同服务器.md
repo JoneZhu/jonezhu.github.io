@@ -67,10 +67,29 @@ ssh -T git@github.com
 ssh -T git@gitlab.com
 ```
 
-这些命令应该返回一条消息`Welcome to GitLab`，已成功认证，否则会弹出输入密码，如果弹出输入密码请检查上边几个步骤的正确性。
+这些命令应该返回一条消息`Welcome to GitLab`，已成功认证，否则会弹出输入密码，如果弹出输入密码请检查上边几个步骤的正确性，或者使用如下命令查看连接过程。
+```bash
+# 测试 GitHub 连接
+ssh -vT git@github.com
+
+# 测试 GitLab 连接
+ssh -vT git@gitlab.com
+```
 
 ### 步骤 5: 使用 Git
 
 现在，当你使用 Git 与 GitHub 或 GitLab 交互时，SSH 会自动根据你访问的主机使用正确的密钥。你无需进行任何特别的 Git 配置，只需确保使用正确的仓库 URL 即可。
 
 通过以上步骤，你可以为不同的 Git 服务配置不同的 SSH 密钥，使工作流程更加安全和高效。
+
+### 问题
+##### 在第一次使用返回 `The authenticity of host  can't be established`
+```bash
+The authenticity of host can't be established. ED25519 key fingerprint is SHA256:xxxxxxxxx. This key is not known by any other names. Are you sure you want to continue connecting (yes/no/[fingerprint])?
+```
+SSH 客户端正在尝试首次连接到一个 SSH 服务器，但是这个服务器的 SSH 密钥尚未被你的客户端认可或记录。这个消息是一个是否确实是你尝试连接的服务器的正确指纹。这通常涉及到与系统管理员或通过其他安全渠道（如内部文档、安全邮箱等）确认指纹是否正确。
+1. 验证指纹：首先，你需要验证显示的指纹是否确实是你尝试连接的服务器的正确指纹。这通常涉及到与系统管理员或通过其他安全渠道（如内部文档、安全邮箱等）确认指纹是否正确。
+2. 确认连接：
+    - 如果指纹正确，你可以输入 yes 继续连接。这将把服务器的 SSH 密钥添加到你的 ~/.ssh/known_hosts 文件中，以后连接到此服务器时就不会再显示这个警告。
+    - 如果指纹不正确或你不确定，选择 no 并进一步调查为什么会有指纹不匹配的情况发生。这可能是因为服务器的 SSH 密钥已经更换，或者可能是存在安全风险。
+
