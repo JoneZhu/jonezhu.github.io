@@ -109,9 +109,7 @@ if (cluster.isMaster) {
 - 2. Child Process 模块：这个模块可以用来创建和控制子进程。每个子进程都有自己的内存空间和V8实例。你可以用它来运行一些需要隔离处理的CPU密集型任务。
 - 3. Worker Threads 模块：对于需要执行背景任务或者不想通过进程间通信处理复杂数据共享的场景，可以使用 Worker Threads。这是一个相对较新的方式，允许在单个Node.js进程内部创建多个线程。
 
-
 ### 事件机制
-- 事件机制对开发者并是透明的
 - Node.js 的事件机制基于事件驱动架构，核心思想是“异步非阻塞I/O”。这种架构允许 Node.js 在处理大量并发连接时保持高效，同时不需要为每个连接创建大量的线程，从而减少资源消耗。Node.js 的事件机制主要依赖于几个关键组件：事件循环（Event Loop）、观察者（Observers）、事件队列（Event Queue）和事件触发器（Event Emitter）。
 #####  1. 事件循环（Event Loop）
 事件循环是 Node.js 的心脏，负责协调所有异步操作。它允许 Node.js 执行非阻塞I/O操作——尽管JavaScript是单线程的，但事件循环可以处理多个操作。它在内部使用不同的观察者来监视不同类型的事件（如文件I/O、网络通信等）。
@@ -141,9 +139,6 @@ myEmitter.on('event', () => {
 myEmitter.emit('event');
 ```
 在这个示例中，我们创建了一个 MyEmitter 类的实例，它继承自 EventEmitter。我们订阅了一个名为 event 的事件，并定义了一个简单的回调函数。然后，我们通过调用 emit 方法触发了 event 事件，导致打印出 "An event occurred!"。
-### 异步编程
-- NodeJS最大的卖点——事件机制和异步IO，对开发者并不是透明的。开发者需要按异步方式编写代码才用得上这个卖点，而这一点也遭到了一些NodeJS反对者的抨击。但不管怎样，异步编程确实是NodeJS最大的特点，没有掌握异步编程就不能说是真正学会了NodeJS。本章将介绍与异步编程相关的各种知识。
-- 关于异步编程可以参考[七天学会NodeJS](https://nqdeng.github.io/7-days-nodejs/#6) 我这里就不搬运了。
 ## 引用资料
 - [nodejs和go的语言选择](https://www.zhihu.com/question/583192972/answer/2888081409)
 - [七天学会NodeJS](https://nqdeng.github.io/7-days-nodejs/)
