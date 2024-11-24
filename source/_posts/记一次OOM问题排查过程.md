@@ -114,9 +114,6 @@ at java.lang.reflect.Method.invoke(Method.java:498)
 ```
 
 
-![Img](/images/img_20241124114700_4.png)
-
-
 ##### Q7: ResponseInfo是找不到的，但是OrderBillSimpleDto可以找到，将所有的返回OrderBillSimpleDto 均加上数量集日志，发现如下，某个返回的列表竟然有近10w的数据 ，
 ![Img](/images/img_20241124114201_1.png)
 
