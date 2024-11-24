@@ -7,7 +7,7 @@ categories:
 tags:
 ---
 #### 问题现象
-从监控系统中发现系统状态异常，从后台的日志中查看日志如下
+从监控系统中发现系统节点状态异常，从后台的日志中查看日志如下
 
 ```
 throwable:
@@ -71,8 +71,8 @@ Caused by: java.lang.IndexOutOfBoundsException
 at java.lang.Throwable.getStackTraceElement(Native Method)
 ... 53 more
 ```
-#### 问题原因
-OOM原因：A服务的接口 `/plan/module` 查询条件设置错误，导致查询出了数据库将近10w的订单数据，进而导致内存耗尽。
+#### OOM原因
+A服务的接口 `/plan/module` 查询条件设置错误，导致查询出了数据库将近10w的订单数据，进而导致内存耗尽。在一次回收垃圾中
 ![Img](/images/img_20241124114201_1.png)
 
 #### 解决方案
@@ -93,6 +93,7 @@ at sun.reflect.GeneratedMethodAccessor426.invoke(Unknown Source)
 at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 at java.lang.reflect.Method.invoke(Method.java:498)
 ```
+当Java虚拟机（JVM）花费过多时间进行垃圾回收但未能释放足够的内存时，就会出现这个问题，这通常表明你的应用程序内存不足。
 ##### Q3. 为什么通过ES日志无法获取到异常OOM
 服务未将此异常上报
 
