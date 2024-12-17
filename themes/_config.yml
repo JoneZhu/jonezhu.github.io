@@ -227,7 +227,7 @@ comments:
     enable: true
     repo: JoneZhu/github-page-comment # Github repository name
     # Available values: pathname | url | title | og:title
-    issue_term: pathname
+    issue-term: pathname
     # Available values: github-light | github-dark | preferred-color-scheme | github-dark-orange | icy-dark | dark-blue | photon-dark | boxy-light
     theme: preferred-color-scheme
     label:
