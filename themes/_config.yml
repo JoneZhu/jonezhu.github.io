@@ -205,7 +205,7 @@ search:
 
 ######## Comments ########
 comments:
-  service: # beaudar, utterances, giscus, twikoo, waline, artalk
+  service: utterances # beaudar, utterances, giscus, twikoo, waline, artalk
   comment_title: 有问题请留言~
   lazyload: false # true / false
   # beaudar
