@@ -29,8 +29,8 @@ jobs:
             ${{ runner.OS }}-npm-cache
       - name: Overwrite _config.yml
         run: cp themes/_config.yml themes/stellar/_config.yml
-      - name: Output last 20 lines of _config.yml
-        run: tail -n 20 themes/stellar/_config.yml
+      - name: Output lines 206 to 234 of _config.yml
+        run: sed -n '206,234p' themes/stellar/_config.yml
       - name: Install Dependencies
         run: npm install
       - name: Build
