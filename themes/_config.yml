@@ -206,7 +206,7 @@ search:
 ######## Comments ########
 comments:
   service: # beaudar, utterances, giscus, twikoo, waline, artalk
-  comment_title: 快来参与讨论吧~
+  comment_title: 有问题请留言~
   lazyload: false # true / false
   # beaudar
   # https://beaudar.lipk.org/
@@ -224,11 +224,14 @@ comments:
   # utterances
   # https://utteranc.es/
   utterances:
-    repo: xxx/xxx
-    issue-term: pathname
-    issue-number:
+    enable: true
+    repo: JoneZhu/github-page-comment # Github repository name
+    # Available values: pathname | url | title | og:title
+    issue_term: comments
+    # Available values: github-light | github-dark | preferred-color-scheme | github-dark-orange | icy-dark | dark-blue | photon-dark | boxy-light
     theme: preferred-color-scheme
     label:
+
   # giscus
   # https://giscus.app/zh-CN
   giscus:
@@ -647,12 +650,3 @@ api_host:
   gist: https://gist.github.com
 
 
-# Utterances
-# For more information: https://utteranc.es
-utterances:
-  enable: true
-  repo: JoneZhu/github-page-comment # Github repository name
-  # Available values: pathname | url | title | og:title
-  issue_term: comments
-  # Available values: github-light | github-dark | preferred-color-scheme | github-dark-orange | icy-dark | dark-blue | photon-dark | boxy-light
-  theme: github-light
