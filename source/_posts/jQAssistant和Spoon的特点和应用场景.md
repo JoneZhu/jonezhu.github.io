@@ -38,5 +38,5 @@ Spoon可能对于熟悉Java的开发者来说更容易上手，因为它直接�
 最终的选择应该基于您的具体项目需求、团队技术栈和长期维护考虑。可以尝试使用这两个工具，看哪一个更符合实际需求。
 
 #### 参考资料
-- [如何用图形分析来可视化微服务架构](https://lbs.qq.com/webApi/javascriptGL/glGuide/glEditor)
+- [如何用图形分析来可视化微服务架构](https://www.51cto.com/article/631574.html)
 
