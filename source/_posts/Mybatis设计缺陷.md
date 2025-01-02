@@ -92,7 +92,7 @@ public class DidiMockRecord {
 ```
 从代码中可以看出，`remark` 字段是一个 `String` 类型，而异常信息却显示 MyBatis 试图将其转换为 `Timestamp` 类型。显然，问题并不在于 `remark` 字段的类型定义，而是 MyBatis 在处理结果集时出现了问题。
 
-#### 远码分析
+#### 源码分析
 通过调试 MyBatis 源码，我发现问题的根源在于 `DefaultResultSetHandler` 类的 `createUsingConstructor` 方法。该方法通过构造函数来实例化对象，而构造函数的参数顺序与 SQL 查询结果的列顺序不一致，导致了类型转换错误。
 ```
   private Object createUsingConstructor(ResultSetWrapper rsw, Class<?> resultType, List<Class<?>> constructorArgTypes, List<Object> constructorArgs, Constructor<?> constructor) throws SQLException {
