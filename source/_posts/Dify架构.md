@@ -1,6 +1,10 @@
 ---
 title: Dify架构
 date: 2024-12-27 13:38:02
+categories:
+  - 技术
+  - 问题甜点
+tags:
 ---
 Dify 包括 3 个业务服务组件 api / worker / web (Frontend)，以及 6 个基础组件 vector db / db / redis / nginx / ssrf_proxy / sandbox。
 ![Img](/images/img_20241227133934_1.png)
