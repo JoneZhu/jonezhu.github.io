@@ -9,11 +9,11 @@ categories:
 
 |对比维度|**RF-DETR**|**YOLO**|
 |---|---|---|
-|**技术架构**|Transformer（DINOv2骨干 + 可变形注意力）[](https://cloud.tencent.com.cn/developer/article/2515696?policyId=1003)[](http://web3.arxiv.org/abs/2504.13099?context=cs.CV)|CNN（卷积神经网络）[](https://cloud.tencent.com.cn/developer/article/2515696?policyId=1003)[](https://blog.roboflow.com/ai-for-aerial-imagery/)|
+|**技术架构**|Transformer（DINOv2骨干 + 可变形注意力）|CNN（卷积神经网络）|
 |**核心优势**|**精度之王**，复杂场景（遮挡/小目标/密集）表现优异|**速度之王**，部署灵活，生态成熟|
-|**精度天花板**|**60.5 mAP**（COCO），首个破60的实时模型 [](https://cloud.tencent.com.cn/developer/article/2515696?policyId=1003)[](https://blog.roboflow.com/ai-for-aerial-imagery/)|约56.9 mAP（YOLO最新版）|
-|**后处理**|**无需NMS**，端到端，流程简洁 [](https://cloud.tencent.com.cn/developer/article/2515696?policyId=1003)[](https://blog.roboflow.com/ai-for-aerial-imagery/)|需要NMS，有额外计算开销|
-|**推理速度**|中等型号~4.5ms，大型号~6.8ms [](https://blog.roboflow.com/ai-for-aerial-imagery/)|中等型号~5.1ms，大型号~11.9ms|
+|**精度天花板**|**60.5 mAP**（COCO），首个破60的实时模型|约56.9 mAP（YOLO最新版）|
+|**后处理**|**无需NMS**，端到端，流程简洁|需要NMS，有额外计算开销|
+|**推理速度**|中等型号4.5ms，大型号6.8ms 中等型号5.1ms，大型号11.9ms|
 |**部署灵活性**|支持边缘部署，但生态较新|**生态极完善**，移动端/CPU/量化都支持|
 |**特殊能力**|领域适应性极强，无缝扩展到实例分割|任务丰富，支持YOLO-World零样本检测|
 |**开源协议**|N/S/M/L型号 Apache 2.0，XL/2XL PML 1.0|GPL（YOLOv5）或其他|
@@ -26,7 +26,7 @@ categories:
 
 ### 场景1：果园青果检测（复杂遮挡环境）
 
-在复杂果园环境中检测青果（绿色水果与叶子背景高度相似）[](https://cloud.tencent.com.cn/developer/article/2515696?policyId=1003)[](http://web3.arxiv.org/abs/2504.13099?context=cs.CV)[](https://huggingface.ac.cn/papers/2504.13099)：
+在复杂果园环境中检测青果（绿色水果与叶子背景高度相似）
 
 |指标|RF-DETR|YOLOv12|
 |---|---|---|
@@ -35,13 +35,13 @@ categories:
 |**收敛速度**|**10个epoch内稳定**|较慢|
 |**优势场景**|遮挡/模糊水果识别|速度敏感型任务|
 
-**结论**：RF-DETR在杂乱、遮挡场景中精度优势明显，且收敛极快[](https://cloud.tencent.com.cn/developer/article/2515696?policyId=1003)[](https://huggingface.ac.cn/papers/2504.13099)。
+**结论**：RF-DETR在杂乱、遮挡场景中精度优势明显，且收敛极快。
 
 ---
 
 ### 场景2：航拍图像检测（密集小目标）
 
-在无人机航拍图像（VisDrone2019数据集）中检测密集小目标[](https://jos.hueuni.edu.vn/index.php/hujos-tt/article/view/7862)：
+在无人机航拍图像（VisDrone2019数据集）中检测密集小目标
 
 |指标|RF-DETR|YOLOv11|
 |---|---|---|
@@ -49,9 +49,9 @@ categories:
 |**mAP@0.5:0.95**|**26.6%**（最高）|较低|
 |**推理速度**|较快|**最快**（适合实时）|
 
-**结论**：RF-DETR精度最高，YOLO速度最快[](https://jos.hueuni.edu.vn/index.php/hujos-tt/article/view/7862)。
+**结论**：RF-DETR精度最高，YOLO速度最快。
 
-**航拍数据更细颗粒度的对比**[](https://blog.roboflow.com/ai-for-aerial-imagery/)：
+**航拍数据更细颗粒度的对比**：
 
 |模型|精度(mAP)|延迟(ms)|
 |---|---|---|
@@ -59,20 +59,20 @@ categories:
 |YOLOv11 M|82.4|基准|
 |YOLOv8 M|75.0|-|
 
-RF-DETR M比YOLOv11 M精度高**7.6个百分点**，同时延迟更低[](https://blog.roboflow.com/ai-for-aerial-imagery/)。
+RF-DETR M比YOLOv11 M精度高**7.6个百分点**，同时延迟更低。
 
 ---
 
 ### 场景3：集装箱损伤检测（罕见缺陷）
 
-在集装箱损伤检测任务中[](https://ui.adsabs.harvard.edu/abs/2025arXiv250622517K/abstract)[](https://browse-export.arxiv.org/abs/2506.22517?context=cs.CV)[](https://www.semanticscholar.org/paper/Container-damage-detection-using-advanced-computer-Kumar/37e804cb741da094f0c9543992638dfc9d2598fe)：
+在集装箱损伤检测任务中：
 
 |指标|RF-DETR|YOLOv11/v12|
 |---|---|---|
 |**常规损伤 mAP@50**|77.7%|**81.9%**（更高）|
 |**罕见/不常见损伤**|**表现更优**，高置信度检测|表现较弱|
 
-**结论**：YOLO在常规损伤上精度更高，但**RF-DETR对罕见/不常见类型的损伤检测更可靠**，泛化能力更强[](https://ui.adsabs.harvard.edu/abs/2025arXiv250622517K/abstract)[](https://browse-export.arxiv.org/abs/2506.22517?context=cs.CV)[](https://www.semanticscholar.org/paper/Container-damage-detection-using-advanced-computer-Kumar/37e804cb741da094f0c9543992638dfc9d2598fe)。
+**结论**：YOLO在常规损伤上精度更高，但**RF-DETR对罕见/不常见类型的损伤检测更可靠**，泛化能力更强。
 
 ---
 
@@ -84,16 +84,16 @@ RF-DETR M比YOLOv11 M精度高**7.6个百分点**，同时延迟更低[](https:/
     
 - **后处理**：需要NMS删除重复框 → 在密集场景下可能误删真实目标
     
-- **预训练**：通常基于COCO，领域迁移需要更多数据[](https://cloud.tencent.com.cn/developer/article/2515696?policyId=1003)[](https://blog.roboflow.com/ai-for-aerial-imagery/)
+- **预训练**：通常基于COCO，领域迁移需要更多数据
     
 
 ### RF-DETR（Transformer路线）
 
 - **视野**：**全局视野**，自注意力机制让模型一上来就能"看到"整张图所有位置的关系
     
-- **后处理**：**无需NMS**，端到端设计，不会误删密集目标[](https://cloud.tencent.com.cn/developer/article/2515696?policyId=1003)[](https://blog.roboflow.com/ai-for-aerial-imagery/)
+- **后处理**：**无需NMS**，端到端设计，不会误删密集目标
     
-- **预训练**：**DINOv2自监督**，在海量无标注数据上预训练，领域适应性极强[](https://cloud.tencent.com.cn/developer/article/2515696?policyId=1003)[](http://web3.arxiv.org/abs/2504.13099?context=cs.CV)
+- **预训练**：**DINOv2自监督**，在海量无标注数据上预训练，领域适应性极强
     
 
 ---
