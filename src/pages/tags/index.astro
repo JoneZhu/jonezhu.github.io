@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { getPosts } from '../../lib/posts.mjs';
+import { tagUrl } from '../../lib/urls.mjs';
+import { site } from '../../site.config.mjs';
+
+const { tags } = getPosts();
+---
+
+<BaseLayout title="标签" description={`${site.title}的全部标签。`}>
+  <div class="wrap">
+    <PageHeader kicker="标签" title="全部标签" description={`共 ${tags.length} 个标签。`} />
+    <ul class="term-cloud">
+      {tags.map((tag) => (
+        <li class="term-cloud__item">
+          <a class="term-cloud__link" href={tagUrl(tag.slug)}>
+            {tag.name}
+            <span class="term-cloud__count">{tag.count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

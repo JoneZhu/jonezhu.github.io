@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import PostList from '../../../components/PostList.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { getPosts } from '../../../lib/posts.mjs';
+import { getCategoryPosts } from '../../../lib/taxonomy.mjs';
+import { paginate, categoryUrl, encodeSegment } from '../../../lib/urls.mjs';
+import { site } from '../../../site.config.mjs';
+
+export function getStaticPaths() {
+  const { categoryPaths } = getPosts();
+  const postsBySlug = getCategoryPosts();
+  return categoryPaths.map((cat) => {
+    const items = postsBySlug.get(cat.slug) ?? [];
+    const first = paginate(items, site.perPage)[0];
+    return {
+      params: { slug: cat.slug },
+      props: {
+        category: cat,
+        items: first.items,
+        page: first.page,
+        totalPages: first.totalPages,
+      },
+    };
+  });
+}
+
+const { category, items, page, totalPages } = Astro.props;
+const parent = category.path.length > 1 ? category.path.slice(0, -1) : null;
+---
+
+<BaseLayout
+  title={`分类：${category.path.join(' / ')}`}
+  description={`${site.title}分类「${category.path.join(' / ')}」下的文章，共 ${category.count} 篇。`}
+>
+  <div class="wrap">
+    <PageHeader
+      kicker="分类"
+      title={category.path.join(' / ')}
+      description={`共 ${category.count} 篇${totalPages > 1 ? ` · 第 ${page} / ${totalPages} 页` : ''}`}
+    />
+    {parent && (
+      <p class="term-parent">
+        上级分类：
+        <a href={categoryUrl(parent.map(encodeSegment).join('/'))}>
+          {parent.join(' / ')}
+        </a>
+      </p>
+    )}
+    <PostList posts={items} level={2} />
+    <Pagination current={page} total={totalPages} base={categoryUrl(category.slug)} />
+  </div>
+</BaseLayout>

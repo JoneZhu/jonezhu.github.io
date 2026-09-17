@@ -1,0 +1,50 @@
+---
+interface TocItem {
+  depth: number;
+  id: string;
+  text: string;
+}
+
+interface Props {
+  toc: TocItem[];
+}
+
+const { toc } = Astro.props;
+const minDepth = toc.length ? Math.min(...toc.map((t) => t.depth)) : 2;
+---
+
+{toc.length > 0 && (
+  <nav class="toc" aria-label="文章目录" data-toc>
+    <details class="toc__details" data-toc-details open>
+      <summary class="toc__summary" data-toc-summary>
+        文章目录（{toc.length} 节）
+      </summary>
+      <ul class="toc__list">
+        {toc.map((item) => (
+          <li class:list={['toc__item', `toc__item--depth-${item.depth - minDepth}`]}>
+            <a class="toc__link" href={`#${item.id}`}>{item.text}</a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  </nav>
+)}
+
+<script is:inline>
+  // 目录默认状态随视口：<=900px 折叠，桌面展开；仅在断点切换时重置，尊重用户点击。
+  (function () {
+    var el = document.querySelector('[data-toc-details]');
+    if (!el) return;
+    var mq = window.matchMedia('(max-width: 900px)');
+    var mode = mq.matches ? 'mobile' : 'desktop';
+    el.open = !mq.matches;
+    function onChange(event) {
+      var next = event.matches ? 'mobile' : 'desktop';
+      if (next === mode) return;
+      mode = next;
+      el.open = !event.matches;
+    }
+    if (typeof mq.addEventListener === 'function') mq.addEventListener('change', onChange);
+    else if (typeof mq.addListener === 'function') mq.addListener(onChange);
+  })();
+</script>

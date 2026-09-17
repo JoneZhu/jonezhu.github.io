@@ -4,6 +4,11 @@ db.json
 *.log
 node_modules/
 public/
+dist/
+.astro/
+.astro-public/
+output/
+.playwright-cli/
 .deploy*/
 _multiconfig.yml
 

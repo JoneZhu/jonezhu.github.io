@@ -1,0 +1,260 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import TableOfContents from '../../../../components/TableOfContents.astro';
+import { getPosts } from '../../../../lib/posts.mjs';
+import { renderMarkdown } from '../../../../lib/markdown.mjs';
+import { getLegacyHeadingIds } from '../../../../lib/legacy-headings.mjs';
+import { categoryUrlFromPath } from '../../../../lib/urls.mjs';
+import { site } from '../../../../site.config.mjs';
+
+export async function getStaticPaths() {
+  const { posts } = getPosts();
+  return posts.map((post, index) => ({
+    params: {
+      year: String(post.dateParts.y),
+      month: String(post.dateParts.urlDate.split('/')[1]),
+      day: String(post.dateParts.urlDate.split('/')[2]),
+      slug: post.name,
+    },
+    props: {
+      post,
+      newer: posts[index - 1] ?? null,
+      older: posts[index + 1] ?? null,
+    },
+  }));
+}
+
+const { post, newer, older } = Astro.props;
+const { html, toc } = await renderMarkdown(post.content, {
+  legacyIds: getLegacyHeadingIds(post.url),
+});
+
+const description = post.excerpt || site.description;
+const ogImage = (post.content.match(/!\[[^\]]*\]\((\/images\/[^)]+)\)/) ?? [])[1];
+
+const utterances = site.comments.utterances;
+---
+
+<BaseLayout
+  title={post.title}
+  description={description}
+  ogType="article"
+  ogImage={ogImage}
+>
+  <article class="article" data-article>
+    <header class="article__header wrap">
+      {post.categories.length > 0 && (
+        <p class="article__categories">
+          {post.categories.map((name, i) => (
+            <>
+              {i > 0 && <span aria-hidden="true"> / </span>}
+              <a href={categoryUrlFromPath(post.categories.slice(0, i + 1))}>{name}</a>
+            </>
+          ))}
+        </p>
+      )}
+      <h1 class="article__title">{post.title}</h1>
+      <div class="article__meta">
+        <time dateTime={post.dateStr}>发布于 {post.dateStr}</time>
+        <span aria-hidden="true">·</span>
+        <span>约 {post.readingTime} 分钟阅读</span>
+      </div>
+    </header>
+
+    <div class="article__layout wrap">
+      <div class="article__body" data-article-body>
+        <div class="prose" set:html={html} />
+        <footer class="article__footer">
+          <nav class="post-nav" aria-label="相邻文章">
+            {older ? (
+              <a class="post-nav__item post-nav__item--prev" href={older.url}>
+                <span class="post-nav__label">上一篇</span>
+                <span class="post-nav__title">{older.title}</span>
+              </a>
+            ) : (
+              <span class="post-nav__item is-empty" aria-hidden="true" />
+            )}
+            {newer ? (
+              <a class="post-nav__item post-nav__item--next" href={newer.url}>
+                <span class="post-nav__label">下一篇</span>
+                <span class="post-nav__title">{newer.title}</span>
+              </a>
+            ) : (
+              <span class="post-nav__item is-empty" aria-hidden="true" />
+            )}
+          </nav>
+          <p class="article__back">
+            <a href="/blog/">← 返回文章列表</a>
+          </p>
+        </footer>
+      </div>
+
+      <aside class="article__aside">
+        <TableOfContents toc={toc} />
+      </aside>
+    </div>
+
+    <section class="comments wrap" data-comments>
+      <div class="comments__head">
+        <h2 class="comments__title">{site.comments.title}</h2>
+        <a
+          class="comments__link"
+          href={`https://github.com/${utterances.repo}/issues`}
+          rel="noopener noreferrer"
+          target="_blank"
+          >在 GitHub 查看讨论</a
+        >
+      </div>
+      <script
+        is:inline
+        src="https://utteranc.es/client.js"
+        repo={utterances.repo}
+        issue-term={utterances.issueTerm}
+        theme={utterances.theme}
+        label={utterances.label || undefined}
+        branch={utterances.branch}
+        crossorigin="anonymous"
+        async
+      ></script>
+    </section>
+  </article>
+</BaseLayout>
+
+<script>
+  // 代码复制：包裹代码块并注入按钮，提供真实成功/失败反馈。
+  function setupCodeCopy() {
+    const blocks = document.querySelectorAll('.prose pre');
+    blocks.forEach((pre) => {
+      if (pre.closest('.code-block')) return;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      pre.parentNode?.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-copy';
+      button.textContent = '复制';
+      button.setAttribute('aria-label', '复制代码');
+      button.addEventListener('click', async () => {
+        const code = pre.querySelector('code')?.innerText ?? pre.innerText;
+        try {
+          await navigator.clipboard.writeText(code);
+          button.textContent = '已复制';
+        } catch {
+          button.textContent = '复制失败';
+        }
+        button.classList.add('is-done');
+        window.setTimeout(() => {
+          button.textContent = '复制';
+          button.classList.remove('is-done');
+        }, 1800);
+      });
+      wrapper.appendChild(button);
+    });
+  }
+
+  // 目录当前段落高亮。
+  function setupTocHighlight() {
+    const toc = document.querySelector('[data-toc]');
+    const body = document.querySelector('[data-article-body]');
+    if (!toc || !body) return;
+    const links = new Map(
+      [...toc.querySelectorAll('a[href^="#"]')].map((a) => [
+        decodeURIComponent(a.getAttribute('href').slice(1)),
+        a,
+      ]),
+    );
+    const headings = [...body.querySelectorAll('.prose h2, .prose h3, .prose h4')].filter(
+      (h) => h.id,
+    );
+    if (!headings.length || typeof IntersectionObserver === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          links.forEach((link) => link.classList.remove('is-active'));
+          links.get(entry.target.id)?.classList.add('is-active');
+        }
+      },
+      { rootMargin: '-80px 0px -70% 0px', threshold: 0 },
+    );
+    headings.forEach((h) => observer.observe(h));
+  }
+
+  // utterances 主题跟随手动切换。
+  function setupUtterancesTheme() {
+    const container = document.querySelector('[data-comments]');
+    if (!container) return;
+
+    let frame = null;
+    let frameLoaded = false;
+    let lastSentTheme = null;
+
+    function themeName() {
+      return document.documentElement.getAttribute('data-theme') === 'dark'
+        ? 'github-dark'
+        : 'github-light';
+    }
+
+    // 仅在 iframe 已加载后发送，避免向 about:blank 发送产生 origin 警告；
+    // lastSentTheme 去重，避免 ready / resize 消息重复触发发送。
+    function sendTheme() {
+      if (!frameLoaded || !frame || !frame.contentWindow) return;
+      const theme = themeName();
+      if (theme === lastSentTheme) return;
+      lastSentTheme = theme;
+      frame.contentWindow.postMessage(
+        { type: 'set-theme', theme },
+        'https://utteranc.es',
+      );
+    }
+
+    function attach(next) {
+      if (!next || next === frame) return;
+      frame = next;
+      frameLoaded = false;
+      lastSentTheme = null;
+      frame.addEventListener('load', () => {
+        frameLoaded = true;
+        sendTheme();
+      });
+    }
+
+    const existing = container.querySelector('.utterances-frame');
+    if (existing) attach(existing);
+
+    // utterances 脚本异步插入 iframe，用 MutationObserver 等待它出现。
+    if (typeof MutationObserver !== 'undefined') {
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          for (const node of mutation.addedNodes) {
+            if (node.nodeType !== 1) continue;
+            if (typeof node.matches !== 'function') continue;
+            if (node.matches('.utterances-frame')) attach(node);
+            else {
+              const inner = node.querySelector?.('.utterances-frame');
+              if (inner) attach(inner);
+            }
+          }
+        }
+      });
+      observer.observe(container, { childList: true, subtree: true });
+    }
+
+    // utterances 就绪后会向父页发消息；只接受来自当前 iframe 的消息。
+    window.addEventListener('message', (event) => {
+      if (event.origin !== 'https://utteranc.es') return;
+      if (!frame || event.source !== frame.contentWindow) return;
+      frameLoaded = true;
+      sendTheme();
+    });
+
+    document.addEventListener('themechange', sendTheme);
+  }
+
+  setupCodeCopy();
+  setupTocHighlight();
+  setupUtterancesTheme();
+</script>

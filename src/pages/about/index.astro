@@ -1,0 +1,35 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import matter from 'gray-matter';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { renderMarkdown } from '../../lib/markdown.mjs';
+import { site } from '../../site.config.mjs';
+
+// 直接读取 source 原文，保持“关于”内容与旧站一致，不改动 source。
+const aboutFile = path.resolve(process.cwd(), 'source', 'about', 'index.md');
+const raw = fs.existsSync(aboutFile)
+  ? matter(fs.readFileSync(aboutFile, 'utf8')).content
+  : '';
+const { html } = await renderMarkdown(raw);
+---
+
+<BaseLayout title="关于" description={`关于 ${site.author} 与 ${site.title}。`}>
+  <div class="wrap about">
+    <header class="page-header">
+      <p class="page-header__kicker">关于</p>
+      <h1 class="page-header__title">关于</h1>
+      <p class="page-header__desc">
+        {site.tagline}记录技术实践、AI 协作，以及关于成长与生活的思考。
+      </p>
+    </header>
+    {html ? (
+      <div class="about__body prose" set:html={html} />
+    ) : (
+      <p class="about__empty">关于页面内容暂缺。</p>
+    )}
+    <p class="about__github">
+      <a href={site.github} rel="noopener noreferrer" target="_blank">GitHub · {site.author}</a>
+    </p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../../components/PageHeader.astro';
+import PostList from '../../../../components/PostList.astro';
+import Pagination from '../../../../components/Pagination.astro';
+import { getPosts } from '../../../../lib/posts.mjs';
+import { getCategoryPosts } from '../../../../lib/taxonomy.mjs';
+import { paginate, categoryUrl } from '../../../../lib/urls.mjs';
+import { site } from '../../../../site.config.mjs';
+
+export function getStaticPaths() {
+  const { categoryPaths } = getPosts();
+  const postsBySlug = getCategoryPosts();
+  const routes = [];
+  for (const cat of categoryPaths) {
+    const items = postsBySlug.get(cat.slug) ?? [];
+    for (const p of paginate(items, site.perPage)) {
+      if (p.page === 1) continue;
+      routes.push({
+        params: { slug: cat.slug, page: String(p.page) },
+        props: { category: cat, items: p.items, page: p.page, totalPages: p.totalPages },
+      });
+    }
+  }
+  return routes;
+}
+
+const { category, items, page, totalPages } = Astro.props;
+---
+
+<BaseLayout
+  title={`分类：${category.path.join(' / ')} · 第 ${page} 页`}
+  description={`${site.title}分类「${category.path.join(' / ')}」第 ${page} 页。`}
+  noindex
+>
+  <div class="wrap">
+    <PageHeader
+      kicker="分类"
+      title={category.path.join(' / ')}
+      description={`共 ${category.count} 篇 · 第 ${page} / ${totalPages} 页`}
+    />
+    <PostList posts={items} level={2} />
+    <Pagination current={page} total={totalPages} base={categoryUrl(category.slug)} />
+  </div>
+</BaseLayout>

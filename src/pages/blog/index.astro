@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PostList from '../../components/PostList.astro';
+import Pagination from '../../components/Pagination.astro';
+import { getPosts } from '../../lib/posts.mjs';
+import { paginate } from '../../lib/urls.mjs';
+import { site } from '../../site.config.mjs';
+
+const { posts } = getPosts();
+const pages = paginate(posts, site.perPage);
+const first = pages[0];
+---
+
+<BaseLayout title="文章" description={`${site.title}的全部文章，共 ${posts.length} 篇。`}>
+  <div class="wrap">
+    <PageHeader
+      kicker="文章"
+      title="全部文章"
+      description={`共 ${posts.length} 篇，按时间倒序排列。`}
+    />
+    <PostList posts={first.items} level={2} />
+    <Pagination current={first.page} total={first.totalPages} base="/blog/" />
+  </div>
+</BaseLayout>

@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../../components/PageHeader.astro';
+import ArchiveList from '../../../../components/ArchiveList.astro';
+import YearNav from '../../../../components/YearNav.astro';
+import Pagination from '../../../../components/Pagination.astro';
+import { getArchiveData } from '../../../../lib/archives.mjs';
+import { paginate } from '../../../../lib/urls.mjs';
+import { site } from '../../../../site.config.mjs';
+
+export function getStaticPaths() {
+  const pages = [];
+  for (const entry of getArchiveData()) {
+    for (const p of paginate(entry.posts, site.perPage)) {
+      if (p.page === 1) continue;
+      pages.push({
+        params: { year: String(entry.year), page: String(p.page) },
+        props: { year: entry.year, items: p.items, page: p.page, totalPages: p.totalPages },
+      });
+    }
+  }
+  return pages;
+}
+
+const { year, items, page, totalPages } = Astro.props;
+---
+
+<BaseLayout title={`${year} 年归档 · 第 ${page} 页`} description={`${site.title} ${year} 年归档，第 ${page} 页。`} noindex>
+  <div class="wrap">
+    <PageHeader kicker="归档" title={`${year} 年`} description={`第 ${page} / ${totalPages} 页`} />
+    <YearNav />
+    <ArchiveList posts={items} />
+    <Pagination current={page} total={totalPages} base={`/archives/${year}/`} />
+  </div>
+</BaseLayout>

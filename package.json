@@ -1,26 +1,29 @@
 {
-  "name": "hexo-site",
-  "version": "0.0.0",
+  "name": "wuxian-fancuo",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "build": "hexo generate",
-    "clean": "hexo clean",
-    "deploy": "hexo deploy",
-    "server": "hexo server"
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=9.6.5"
   },
-  "hexo": {
-    "version": "7.3.0"
+  "scripts": {
+    "prepare:assets": "node scripts/prepare-assets.mjs",
+    "predev": "node scripts/prepare-assets.mjs",
+    "prebuild": "node scripts/prepare-assets.mjs",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "preserver": "node scripts/prepare-assets.mjs",
+    "server": "astro dev",
+    "astro": "astro",
+    "new": "node scripts/new-post.mjs"
   },
   "dependencies": {
-    "hexo": "^7.3.0",
-    "hexo-generator-archive": "^2.0.0",
-    "hexo-generator-category": "^2.0.0",
-    "hexo-generator-index": "^4.0.0",
-    "hexo-generator-tag": "^2.0.0",
-    "hexo-renderer-ejs": "^2.0.0",
-    "hexo-renderer-marked": "^7.0.0",
-    "hexo-renderer-stylus": "^3.0.1",
-    "hexo-server": "^3.0.0",
-    "hexo-theme-landscape": "^1.0.0"
+    "astro": "^7.3.3",
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.13",
+    "marked-gfm-heading-id": "^4.1.4",
+    "shiki": "^4.4.3"
   }
 }

@@ -5,47 +5,38 @@ on:
     branches:
       - main # default branch
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # If your repository depends on submodule, please see: https://github.com/actions/checkout
           submodules: recursive
-      - name: Use Node.js 16
+      - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
-          # Examples: 20, 18.19, >=16.20.2, lts/Iron, lts/Hydrogen, *, latest, current, node
-          # Ref: https://github.com/actions/setup-node#supported-version-syntax
-          node-version: "16"
-      - name: Cache NPM dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.OS }}-npm-cache
-          restore-keys: |
-            ${{ runner.OS }}-npm-cache
-      - name: Overwrite _config.yml
-        run: cp themes/_config.yml themes/stellar/_config.yml
-      - name: Output lines 206 to 234 of _config.yml
-        run: sed -n '206,234p' themes/stellar/_config.yml
-      - name: Install Dependencies
-        run: npm install
+          node-version: "22"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
       - name: Build
         run: npm run build
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
-      - name: List contents of the repository
-        run: ls -lah
+          path: ./dist
+
   deploy:
     needs: build
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

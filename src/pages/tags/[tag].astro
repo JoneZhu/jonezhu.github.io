@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts } from '../../lib/posts.mjs';
+import { getTagPosts } from '../../lib/taxonomy.mjs';
+import { tagUrl } from '../../lib/urls.mjs';
+import { site } from '../../site.config.mjs';
+
+export function getStaticPaths() {
+  const { tags } = getPosts();
+  const postsBySlug = getTagPosts();
+  return tags.map((tag) => ({
+    params: { tag: tag.slug },
+    props: { tag, items: postsBySlug.get(tag.slug) ?? [] },
+  }));
+}
+
+const { tag, items } = Astro.props;
+---
+
+<BaseLayout
+  title={`标签：${tag.name}`}
+  description={`${site.title}标签「${tag.name}」下的文章，共 ${items.length} 篇。`}
+>
+  <div class="wrap">
+    <PageHeader kicker="标签" title={`# ${tag.name}`} description={`共 ${items.length} 篇`} />
+    <PostList posts={items} level={2} />
+    <p class="term-parent"><a href="/tags/">← 全部标签</a></p>
+  </div>
+</BaseLayout>

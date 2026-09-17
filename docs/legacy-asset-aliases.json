@@ -1,0 +1,71 @@
+{
+ "note": "Hexo 历史附件路径异常兼容映射。old_public_path -> 已跟踪 source 文件（按内容 SHA256 匹配）。CI 不依赖未跟踪 public/db.json。",
+ "aliases": [
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/_20241116114749_1.png",
+   "source": "source/_posts/记一次OOM问题的排查/img_20241116114749_1.png",
+   "sha256": "ea274c19958da7d6b5ce6a26db3425e428c2673e47c278437aab9e34198277fa"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/_20241116114943_2.png",
+   "source": "source/_posts/记一次OOM问题的排查/img_20241116114943_2.png",
+   "sha256": "2043a5a66496fc4f9cdb65f18ee493ca67d09f5d61fc1f33f7112cdff415481f"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/_20241116133620_3.png",
+   "source": "source/_posts/记一次OOM问题的排查/img_20241116133620_3.png",
+   "sha256": "fec35bfa747587b36fa31fed85b3efb604b30374c02047300085f343f0c6aed6"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/p导航栏优化/img_20250412141703_1.jpg",
+   "source": "source/_posts/AI编程实践-FluterApp导航栏优化/img_20250412141703_1.jpg",
+   "sha256": "8bb3661c967a7ad74f8bc48c4a53503e706c4b0e3b9f1f11f54bfce646a03055"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/p导航栏优化/img_20250412141936_2.png",
+   "source": "source/_posts/AI编程实践-FluterApp导航栏优化/img_20250412141936_2.png",
+   "sha256": "3d73f0d4c7b18866a635fc986aaed3444d22ee1b5179c3ba5465da0eb8a8c0f7"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/p导航栏优化/img_20250412142013_3.png",
+   "source": "source/_posts/AI编程实践-FluterApp导航栏优化/img_20250412142013_3.png",
+   "sha256": "8741431e64873b60699cba0803fbc91aff118ffced73cc84269606e351ae7420"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/p导航栏优化/img_20250412142120_4.png",
+   "source": "source/_posts/AI编程实践-FluterApp导航栏优化/img_20250412142120_4.png",
+   "sha256": "9cacbcad155e9347e8d0bcf446d4306c26492669ec5662f3e46cbbeac1c17f4d"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/p导航栏优化/img_20250412142905_5.jpg",
+   "source": "source/_posts/AI编程实践-FluterApp导航栏优化/img_20250412142905_5.jpg",
+   "sha256": "3e64185585c567c23c9793032fb6afffb48b15bcf17493e2b32e5f7f51986e26"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/p导航栏优化/img_20250413144853_1.jpg",
+   "source": "source/_posts/AI编程实践-FluterApp导航栏优化/img_20250413144853_1.jpg",
+   "sha256": "aa2aa934decadf73fe128ab1ec04d089bbf26ac88a9336fa369e1ce541423c74"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/p导航栏优化/img_20250413145135_2.png",
+   "source": "source/_posts/AI编程实践-FluterApp导航栏优化/img_20250413145135_2.png",
+   "sha256": "167047c2ee26c3779d075d07aec4be7674e81b5760cbf01bce64a3513bac6861"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/p导航栏优化/img_20250413145257_3.png",
+   "source": "source/_posts/AI编程实践-FluterApp导航栏优化/img_20250413145257_3.png",
+   "sha256": "da46d7b8a5f6752f723199f436d5ea7a51e8b267c494c1e719b3d137c6845dd9"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/p导航栏优化/img_20250413145448_4.png",
+   "source": "source/_posts/AI编程实践-FluterApp导航栏优化/img_20250413145448_4.png",
+   "sha256": "3b1da0e5f5a2337953acf6931af3632280c886d31437d4002ef10e993ba7333f"
+  },
+  {
+   "old_public_path": "2025/01/15/2025年段永平浙江大学谈话/uade/img_20250417221915_1.png",
+   "source": "source/_posts/GeminiPro_VS_Cluade/img_20250417221915_1.png",
+   "sha256": "9b142d4a4eadde232eb99d26144fbd3d9e0eaad0c986083c19792b9ccde4d946"
+  }
+ ],
+ "count": 13
+}

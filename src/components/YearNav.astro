@@ -1,0 +1,17 @@
+---
+import { getArchiveData } from '../lib/archives.mjs';
+
+/** 归档页顶部的年份快捷入口，避免只能逐页向后翻。 */
+const years = getArchiveData().map((entry) => entry.year);
+---
+
+<nav class="year-nav" aria-label="按年份浏览">
+  <span class="year-nav__label">年份</span>
+  <ul class="year-nav__list">
+    {years.map((year) => (
+      <li class="year-nav__item">
+        <a class="year-nav__link" href={`/archives/${year}/`}>{year}</a>
+      </li>
+    ))}
+  </ul>
+</nav>

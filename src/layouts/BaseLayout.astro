@@ -1,0 +1,163 @@
+---
+import '../styles/global.css';
+import { site, nav } from '../site.config.mjs';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  canonical,
+  ogImage,
+  ogType = 'website',
+  noindex = false,
+  bodyClass = '',
+} = Astro.props;
+
+const canon = new URL(canonical ?? Astro.url.pathname, Astro.site).href;
+const ogImg = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+const pageTitle = title === site.title ? site.title : `${title} · ${site.title}`;
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
+---
+
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canon} />
+    <link rel="icon" href="/images/favicon_io/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" href="/images/favicon_io/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/images/favicon_io/apple-touch-icon.png" />
+    <link rel="manifest" href="/images/favicon_io/site.webmanifest" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.title} RSS`}
+      href={new URL('/rss.xml', Astro.site).href}
+    />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.title} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canon} />
+    {ogImg && <meta property="og:image" content={ogImg} />}
+    <meta name="twitter:card" content={ogImg ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8f7f3" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a18" />
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var theme =
+            stored === 'dark' || stored === 'light'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+  </head>
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <header class="site-header">
+      <div class="site-header__inner wrap">
+        <a class="site-brand" href="/" aria-label={`${site.title}，回到首页`}>
+          <span class="site-brand__mark" aria-hidden="true">∞</span>
+          <span class="site-brand__name">{site.title}</span>
+        </a>
+        <div class="site-header__end">
+          <nav class="site-nav" aria-label="主导航">
+            {nav.map((item) => (
+              <a
+                class:list={['site-nav__link', { 'is-active': isActive(item.href) }]}
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <div class="site-actions">
+            <a
+              class:list={['site-search-link', { 'is-active': isActive('/search/') }]}
+              href="/search/"
+              aria-label="搜索文章"
+            >
+              搜索
+            </a>
+            <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题">
+              <span data-theme-label>深色</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main id="main-content" class="site-main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="site-footer__inner wrap">
+        <p class="site-footer__meta">
+          © {new Date().getFullYear()} {site.author} · 记录技术实践与生活思考
+        </p>
+        <nav class="site-footer__links" aria-label="页脚链接">
+          <a href="/blog/">文章</a>
+          <a href="/archives/">归档</a>
+          <a href="/rss.xml">RSS</a>
+          <a href={site.github} rel="noopener noreferrer" target="_blank">GitHub</a>
+        </nav>
+      </div>
+    </footer>
+    <script>
+      const root = document.documentElement;
+      const toggle = document.querySelector('[data-theme-toggle]');
+      const label = document.querySelector('[data-theme-label]');
+
+      function syncThemeButton() {
+        const dark = root.getAttribute('data-theme') === 'dark';
+        if (label) label.textContent = dark ? '浅色' : '深色';
+        if (toggle)
+          toggle.setAttribute('aria-label', dark ? '切换到浅色模式' : '切换到深色模式');
+      }
+
+      toggle?.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('theme', next);
+        } catch (e) {
+          /* 忽略隐私模式下的存储失败 */
+        }
+        syncThemeButton();
+        document.dispatchEvent(new CustomEvent('themechange', { detail: { theme: next } }));
+      });
+
+      syncThemeButton();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="页面未找到"
+  description="找不到该页面，返回首页或浏览全部文章。"
+  canonical="/404.html"
+  noindex
+>
+  <div class="wrap not-found">
+    <p class="not-found__code" aria-hidden="true">404</p>
+    <h1 class="not-found__title">页面未找到</h1>
+    <p class="not-found__desc">你访问的地址可能输入有误，或内容已被移动。</p>
+    <p class="not-found__actions">
+      <a class="button" href="/">回到首页</a>
+      <a class="button button--ghost" href="/blog/">浏览全部文章</a>
+    </p>
+  </div>
+</BaseLayout>

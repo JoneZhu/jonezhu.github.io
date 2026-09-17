@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import PostList from '../../components/PostList.astro';
+import Pagination from '../../components/Pagination.astro';
+import { getPosts } from '../../lib/posts.mjs';
+import { paginate } from '../../lib/urls.mjs';
+import { site } from '../../site.config.mjs';
+
+// 旧 Hexo 根分页 /page/N/ 的静态兼容：
+//  - 分页控件与 canonical 都指向对应的 /blog/page/N/（唯一正式分页）；
+//  - 本身 noindex，不进入 sitemap。
+export function getStaticPaths() {
+  const { posts } = getPosts();
+  const pages = paginate(posts, site.perPage);
+  return pages
+    .filter((p) => p.page > 1)
+    .map((p) => ({
+      params: { page: String(p.page) },
+      props: { items: p.items, page: p.page, totalPages: p.totalPages },
+    }));
+}
+
+const { items, page, totalPages } = Astro.props;
+const canonical = page === 1 ? '/blog/' : `/blog/page/${page}/`;
+---
+
+<BaseLayout
+  title={`文章 · 第 ${page} 页`}
+  description={`${site.title}的全部文章，第 ${page} / ${totalPages} 页。`}
+  canonical={canonical}
+  noindex
+>
+  <div class="wrap">
+    <PageHeader kicker="文章" title="全部文章" description={`第 ${page} / ${totalPages} 页`} />
+    <PostList posts={items} level={2} />
+    <Pagination current={page} total={totalPages} base="/blog/" />
+  </div>
+</BaseLayout>

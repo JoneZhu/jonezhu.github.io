@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { getPosts } from '../../lib/posts.mjs';
+import { categoryUrl } from '../../lib/urls.mjs';
+import { site } from '../../site.config.mjs';
+
+const { categoryPaths, count } = getPosts();
+const roots = categoryPaths.filter((c) => c.path.length === 1);
+---
+
+<BaseLayout title="分类" description={`${site.title}的全部分类。`}>
+  <div class="wrap">
+    <PageHeader kicker="分类" title="全部分类" description={`${count} 篇文章，${categoryPaths.length} 个分类。`} />
+    <ul class="term-list">
+      {roots.map((cat) => (
+        <li class="term-list__item">
+          <a class="term-list__link" href={categoryUrl(cat.slug)}>
+            <span class="term-list__name">{cat.name}</span>
+            <span class="term-list__count">{cat.count}</span>
+          </a>
+          <ul class="term-list__children">
+            {categoryPaths
+              .filter((c) => c.path.length === 2 && c.path[0] === cat.name)
+              .map((child) => (
+                <li class="term-list__child">
+                  <a href={categoryUrl(child.slug)}>
+                    {child.name}
+                    <span class="term-list__count">{child.count}</span>
+                  </a>
+                </li>
+              ))}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import YearNav from '../../../components/YearNav.astro';
+import ArchiveList from '../../../components/ArchiveList.astro';
+import { getArchiveData } from '../../../lib/archives.mjs';
+import { site } from '../../../site.config.mjs';
+
+export function getStaticPaths() {
+  return getArchiveData().map((entry) => ({
+    params: { year: String(entry.year) },
+    props: { year: entry.year, posts: entry.posts },
+  }));
+}
+
+const { year, posts } = Astro.props;
+---
+
+<BaseLayout title={`${year} 年归档`} description={`${site.title} ${year} 年文章归档。`}>
+  <div class="wrap">
+    <PageHeader kicker="归档" title={`${year} 年`} description={`共 ${posts.length} 篇`} />
+    <YearNav />
+    <ArchiveList posts={posts} />
+  </div>
+</BaseLayout>

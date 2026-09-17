@@ -1,0 +1,40 @@
+---
+interface Post {
+  title: string;
+  url: string;
+  dateStr: string;
+  readingTime: number;
+  excerpt: string;
+  categories: string[];
+}
+
+interface Props {
+  posts: Post[];
+  /** 条目超过该数量时只显示前 N 条，默认全部。 */
+  limit?: number;
+  /** 列表条目标题级别：首页嵌在 h2 下用 3，列表页直接接 h1 用 2。 */
+  level?: 2 | 3;
+}
+
+const { posts, limit, level = 3 } = Astro.props;
+const Heading = `h${level}`;
+const items = limit ? posts.slice(0, limit) : posts;
+---
+
+<ul class="post-list">
+  {items.map((post) => (
+    <li class="post-list__item">
+      <div class="post-list__meta">
+        <time class="post-list__date" dateTime={post.dateStr}>{post.dateStr}</time>
+        {post.categories.length > 0 && (
+          <span class="post-list__categories">{post.categories.join(' · ')}</span>
+        )}
+        <span class="post-list__reading">约 {post.readingTime} 分钟</span>
+      </div>
+      <Heading class="post-list__title">
+        <a href={post.url}>{post.title}</a>
+      </Heading>
+      {post.excerpt && <p class="post-list__excerpt">{post.excerpt}</p>}
+    </li>
+  ))}
+</ul>

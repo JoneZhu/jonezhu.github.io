@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostList from '../components/PostList.astro';
+import { getPosts, getPostByFile } from '../lib/posts.mjs';
+import { truncate } from '../lib/text.mjs';
+import { site } from '../site.config.mjs';
+
+const { posts } = getPosts();
+
+const mainPost = getPostByFile(site.featured.main);
+const secondaryPosts = site.featured.secondary
+  .map((name) => getPostByFile(name))
+  .filter((p): p is NonNullable<typeof p> => p !== null);
+
+const featuredNames = new Set(
+  [mainPost, ...secondaryPosts].filter(Boolean).map((p) => p.name),
+);
+const recentPosts = posts.filter((p) => !featuredNames.has(p.name)).slice(0, 8);
+---
+
+<BaseLayout>
+  <div class="home wrap">
+    <section class="home-masthead">
+      <p class="home-masthead__kicker">{site.kicker}</p>
+      <h1 class="home-masthead__title">{site.title}</h1>
+      <p class="home-masthead__tagline">{site.tagline}</p>
+    </section>
+
+    <section class="home-featured" aria-labelledby="featured-label">
+      <p class="home-featured__label" id="featured-label">精选文章</p>
+      <div class="home-featured__grid">
+        {mainPost && (
+          <article class="featured-card featured-card--main">
+            <p class="featured-card__date">{mainPost.dateStr}</p>
+            <h2 class="featured-card__title">
+              <a href={mainPost.url}>{mainPost.title}</a>
+            </h2>
+            <p class="featured-card__excerpt featured-card__excerpt--main">
+              {truncate(mainPost.excerpt, 110)}
+            </p>
+            <p class="featured-card__reading">约 {mainPost.readingTime} 分钟阅读</p>
+          </article>
+        )}
+        <div class="featured-card--side">
+          {secondaryPosts.map((post) => (
+            <article class="featured-card featured-card--item">
+              <p class="featured-card__date">{post.dateStr}</p>
+              <h3 class="featured-card__title">
+                <a href={post.url}>{post.title}</a>
+              </h3>
+              <p class="featured-card__excerpt">{truncate(post.excerpt, 66)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="home-recent">
+      <div class="section-head">
+        <h2 class="section-head__title">最近文章</h2>
+        <a class="section-head__more" href="/blog/">查看全部</a>
+      </div>
+      <PostList posts={recentPosts} limit={8} />
+    </section>
+
+    <nav class="home-entries" aria-label="栏目入口">
+      {site.homeCategories.map((entry) => (
+        <a class="home-entries__link" href={entry.href}>
+          <span class="home-entries__label">{entry.label}</span>
+          <span class="home-entries__arrow" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </nav>
+  </div>
+</BaseLayout>

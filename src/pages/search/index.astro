@@ -1,0 +1,209 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../site.config.mjs';
+---
+
+<BaseLayout title="搜索" description={`检索${site.title}的全部文章标题与正文。`}>
+  <div class="wrap search" data-search>
+    <header class="page-header">
+      <p class="page-header__kicker">搜索</p>
+      <h1 class="page-header__title">搜索文章</h1>
+      <p class="page-header__desc">可按标题、正文或代码符号检索，大小写不敏感。</p>
+    </header>
+
+    <form class="search__form" role="search" data-search-form>
+      <label class="search__label" for="search-input">关键词</label>
+      <div class="search__row">
+        <input
+          class="search__input"
+          id="search-input"
+          type="search"
+          name="q"
+          placeholder="输入关键词，如 AI、云台、Flutter"
+          autocomplete="off"
+          data-search-input
+        />
+        <button class="search__clear" type="button" data-search-clear hidden>清空</button>
+      </div>
+    </form>
+
+    <p class="search__status" role="status" aria-live="polite" data-search-status>
+      输入关键词开始搜索。
+    </p>
+    <ol class="search__results" data-search-results></ol>
+  </div>
+</BaseLayout>
+
+<script>
+  const root = document.querySelector('[data-search]');
+  if (root) {
+    const form = root.querySelector('[data-search-form]');
+    const input = root.querySelector('[data-search-input]');
+    const clearButton = root.querySelector('[data-search-clear]');
+    const status = root.querySelector('[data-search-status]');
+    const resultsList = root.querySelector('[data-search-results]');
+
+    let indexPromise = null;
+    let requestId = 0;
+    let timer = 0;
+
+    function loadIndex() {
+      if (!indexPromise) {
+        indexPromise = fetch('/search.json', { credentials: 'same-origin' })
+          .then((r) => {
+            if (!r.ok) throw new Error('search index failed');
+            return r.json();
+          })
+          .catch((error) => {
+            // 失败后允许下次输入重试
+            indexPromise = null;
+            throw error;
+          });
+      }
+      return indexPromise;
+    }
+
+    function appendHighlighted(container, text, query) {
+      if (!query) {
+        container.textContent = text;
+        return;
+      }
+      const lower = text.toLowerCase();
+      const q = query.toLowerCase();
+      let from = 0;
+      while (from < text.length) {
+        const at = lower.indexOf(q, from);
+        if (at === -1) {
+          container.appendChild(document.createTextNode(text.slice(from)));
+          break;
+        }
+        container.appendChild(document.createTextNode(text.slice(from, at)));
+        const mark = document.createElement('mark');
+        mark.textContent = text.slice(at, at + q.length);
+        container.appendChild(mark);
+        from = at + q.length;
+      }
+    }
+
+    function snippet(text, query) {
+      const at = query ? text.toLowerCase().indexOf(query.toLowerCase()) : -1;
+      if (at === -1) return text.slice(0, 120) + (text.length > 120 ? '…' : '');
+      const start = Math.max(0, at - 50);
+      const end = Math.min(text.length, at + query.length + 70);
+      return (start > 0 ? '…' : '') + text.slice(start, end) + (end < text.length ? '…' : '');
+    }
+
+    function render(results, query) {
+      resultsList.textContent = '';
+      for (const item of results) {
+        const li = document.createElement('li');
+        li.className = 'search-result';
+
+        const title = document.createElement('h2');
+        title.className = 'search-result__title';
+        const link = document.createElement('a');
+        link.href = item.url;
+        appendHighlighted(link, item.title, query);
+        title.appendChild(link);
+
+        const meta = document.createElement('p');
+        meta.className = 'search-result__meta';
+        meta.textContent = [item.date, ...item.categories].filter(Boolean).join(' · ');
+
+        const para = document.createElement('p');
+        para.className = 'search-result__snippet';
+        appendHighlighted(para, snippet(item.text || item.excerpt, query), query);
+
+        li.append(title, meta, para);
+        resultsList.appendChild(li);
+      }
+    }
+
+    function resetResults() {
+      resultsList.textContent = '';
+      status.textContent = '输入关键词开始搜索。';
+      clearButton.hidden = true;
+    }
+
+    async function runSearch(rawQuery) {
+      const query = rawQuery.trim();
+      clearButton.hidden = query.length === 0;
+      if (!query) {
+        requestId += 1; // 使在途请求失效
+        resetResults();
+        return;
+      }
+
+      const myRequest = ++requestId;
+      status.textContent = '正在搜索…';
+
+      let index;
+      try {
+        index = await loadIndex();
+      } catch {
+        if (myRequest === requestId) {
+          status.textContent = '搜索索引加载失败，请刷新重试。';
+        }
+        return;
+      }
+
+      // 请求过期，或用户已清空/改动输入时，丢弃本次结果。
+      if (myRequest !== requestId || input.value.trim() !== query) return;
+
+      const q = query.toLowerCase();
+      const matches = index.filter((item) => {
+        return (
+          item.title.toLowerCase().includes(q) ||
+          item.text.toLowerCase().includes(q) ||
+          item.tags.some((t) => t.toLowerCase().includes(q)) ||
+          item.categories.some((c) => c.toLowerCase().includes(q))
+        );
+      });
+      matches.sort((a, b) => {
+        const at = a.title.toLowerCase().includes(q) ? 0 : 1;
+        const bt = b.title.toLowerCase().includes(q) ? 0 : 1;
+        if (at !== bt) return at - bt;
+        return a.date < b.date ? 1 : -1;
+      });
+      const top = matches.slice(0, 50);
+      render(top, query);
+      if (matches.length === 0) {
+        status.textContent = `没有找到与“${query}”相关的文章。`;
+      } else {
+        status.textContent = `找到 ${matches.length} 篇相关文章${
+          matches.length > top.length ? `，显示前 ${top.length} 篇` : ''
+        }。`;
+      }
+    }
+
+    input.addEventListener('input', () => {
+      window.clearTimeout(timer);
+      const value = input.value;
+      timer = window.setTimeout(() => runSearch(value), 180);
+    });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      window.clearTimeout(timer);
+      runSearch(input.value);
+    });
+    clearButton.addEventListener('click', () => {
+      window.clearTimeout(timer);
+      input.value = '';
+      input.focus();
+      runSearch('');
+    });
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        window.clearTimeout(timer);
+        input.value = '';
+        runSearch('');
+      }
+    });
+
+    const initial = new URLSearchParams(window.location.search).get('q');
+    if (initial) {
+      input.value = initial;
+      runSearch(initial);
+    }
+  }
+</script>

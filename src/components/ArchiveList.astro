@@ -1,0 +1,50 @@
+---
+interface Post {
+  title: string;
+  url: string;
+  dateStr: string;
+  dateParts: { y: number };
+  categories: string[];
+}
+
+interface Props {
+  posts: Post[];
+  /** 是否在年份变化处插入年份标题。 */
+  grouped?: boolean;
+}
+
+const { posts, grouped = true } = Astro.props;
+
+// 在页面内按年份分组，既满足“按年份展示”，也不丢失分页顺序。
+const groups: Array<{ year: number; posts: Post[] }> = [];
+if (grouped) {
+  for (const post of posts) {
+    const last = groups[groups.length - 1];
+    if (last && last.year === post.dateParts.y) last.posts.push(post);
+    else groups.push({ year: post.dateParts.y, posts: [post] });
+  }
+} else {
+  groups.push({ year: 0, posts });
+}
+---
+
+<div class="archive-list">
+  {groups.map((group) => (
+    <section class="archive-year">
+      {group.year > 0 && <h2 class="archive-year__title">{group.year}</h2>}
+      <ul class="archive-year__items">
+        {group.posts.map((post) => (
+          <li class="archive-item">
+            <time class="archive-item__date" dateTime={post.dateStr}>
+              {post.dateStr.slice(5)}
+            </time>
+            <a class="archive-item__title" href={post.url}>{post.title}</a>
+            {post.categories[0] && (
+              <span class="archive-item__category">{post.categories.join(' · ')}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>

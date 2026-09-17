@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../../components/PageHeader.astro';
+import ArchiveList from '../../../../components/ArchiveList.astro';
+import { getArchiveData } from '../../../../lib/archives.mjs';
+import { site } from '../../../../site.config.mjs';
+
+export function getStaticPaths() {
+  const pages = [];
+  for (const entry of getArchiveData()) {
+    for (const m of entry.months) {
+      pages.push({
+        params: { year: String(entry.year), month: String(m.month).padStart(2, '0') },
+        props: { year: entry.year, month: m.month, posts: m.posts },
+      });
+    }
+  }
+  return pages;
+}
+
+const { year, month, posts } = Astro.props;
+const monthLabel = `${year} 年 ${String(month).padStart(2, '0')} 月`;
+---
+
+<BaseLayout title={`${monthLabel}归档`} description={`${site.title} ${monthLabel}文章归档。`}>
+  <div class="wrap">
+    <PageHeader kicker="归档" title={monthLabel} description={`共 ${posts.length} 篇`} />
+    <ArchiveList posts={posts} grouped={false} />
+  </div>
+</BaseLayout>
